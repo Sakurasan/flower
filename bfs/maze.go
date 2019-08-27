@@ -67,7 +67,7 @@ func walk(start, end point, maze [][]int) [][]int {
 }
 
 func main() {
-	file, _ := os.Open("map.txt")
+	file, _ := os.Open("./bfs/map.txt")
 	row, col := 0, 0
 	fmt.Fscanf(file, "%d %d", &row, &col)
 	fmt.Println(row, col)
