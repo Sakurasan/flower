@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ToDoList</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <h1 id="main">vue</h1>
+    <div id="app">
+    <input placeholder="请输入" type="text" v-model="todo"><button @click="addtodo">Add</button>
+    <h2>ToDo</h2>
+        <ul v-for="iteam in list" v-if="!iteam.done">
+        <li>{{iteam.todo}}&nbsp
+            <input type="checkbox" v-model="iteam.done"></li>
+    </ul>
+    <h2>Done</h2>
+        <ul v-for="iteam in list" v-if="iteam.done">
+            <li>{{iteam.todo}}&nbsp</li>
+    </div>
+</body>
+</html>
+
+<script>
+var app = new Vue({
+    el:'#app',
+    data:{
+        todo:"",
+        list:[]
+    },
+    methods: {
+        addtodo () {
+            this.list.push({todo:this.todo,done:false})
+            console.log(this.list)
+        }
+    },
+}
+)
+</script>
