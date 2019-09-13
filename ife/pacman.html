@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PAC MAN</title>
+</head>
+<body>
+    <div class="pacman"></div>
+</body>
+</html>
+
+<style type="text/css">
+html,
+body{
+    height: 100%;
+}
+
+body{
+    padding: 15%;
+    background-color:#161c2a;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+
+}
+
+.pacman{
+    width: 0;
+    height: 0;
+    border: 200px solid gold;
+    border-radius: 50%;
+    border-right-color: transparent;
+    position: relative;
+
+
+}
+.pacman::before { 
+        content: '';
+        position: absolute;
+        width:45px;
+        height:45px;
+        background-color:black;
+        border-radius: 50%;
+        top:-130px;
+        left:-30px;
+    }
+</style>
