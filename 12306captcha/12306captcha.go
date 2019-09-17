@@ -28,8 +28,7 @@ const tpl = `<!DOCTYPE html>
     <title>12306</title>
 </head>
 <body>
-    <div class="pacman"></div>
-    <img src="%s" alt="">
+    <div><img src="%s" alt=""></div>
 </body>
 </html>
 `
