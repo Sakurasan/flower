@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 	// "github.com/Sakurasan/to"
@@ -45,6 +46,13 @@ func (t *captcha) fmtstruct(data []byte) error {
 }
 
 func main() {
+	var port string
+	if len(os.Args) > 2 && os.Args[1] != "" {
+		port = os.Args[1]
+	} else {
+		fmt.Println("没有指定端口，默认启动:12306")
+		port = "12306"
+	}
 	url := fmt.Sprintf("%s%s", popup_passport_captcha, strconv.FormatInt(time.Now().UnixNano()/1e6, 10))
 
 	mux := http.NewServeMux()
@@ -64,7 +72,7 @@ func main() {
 		io.WriteString(w, fmt.Sprintf(tpl, attr+captcha12306.Image))
 	})
 
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":"+port, mux)
 }
 
 func DoGet(urlstr string) ([]byte, error) {
