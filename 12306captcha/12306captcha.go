@@ -47,7 +47,7 @@ func (t *captcha) fmtstruct(data []byte) error {
 
 func main() {
 	var port string
-	if len(os.Args) > 2 && os.Args[1] != "" {
+	if len(os.Args) >= 2 && os.Args[1] != "" {
 		port = os.Args[1]
 	} else {
 		fmt.Println("没有指定端口，默认启动:12306")
@@ -72,7 +72,7 @@ func main() {
 		io.WriteString(w, fmt.Sprintf(tpl, attr+captcha12306.Image))
 	})
 
-	http.ListenAndServe(":"+port, mux)
+	log.Fatalln(http.ListenAndServe(":"+port, mux))
 }
 
 func DoGet(urlstr string) ([]byte, error) {
