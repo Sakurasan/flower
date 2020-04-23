@@ -63,7 +63,9 @@ func main() {
 	url := fmt.Sprintf("%s%s", popup_passport_captcha, strconv.FormatInt(time.Now().UnixNano()/1e6, 10))
 
 	mux := router.NewRouter()
+	// mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.URL.String())
 		captcha12306 := captcha{}
 		data, err := DoGet(url)
 		if err != nil {
@@ -75,16 +77,12 @@ func main() {
 			fmt.Println(err)
 		}
 		img, _, _ := ReadImageFromString(captcha12306.Image)
-		cut12306(img)
+		pics := cut12306(img)
 		var imglist string
 		for _, v := range pics {
 			bf := bytes.NewBuffer(nil)
 			jpeg.Encode(bf, v, &jpeg.Options{Quality: 80})
 			imglist += fmt.Sprintf(`<img src=data:image/jpg;base64,%s><br>`, base64.StdEncoding.EncodeToString(bf.Bytes()))
-		}
-		orgin := r.Header.Get("Access-Control-Allow-Origin")
-		if orgin == "" {
-			orgin = r.Header.Get("Origin")
 		}
 
 		io.WriteString(w, fmt.Sprintf(tpl, attr+captcha12306.Image, imglist))

@@ -25,8 +25,6 @@ import (
 	"strings"
 )
 
-var pics []image.Image
-
 const (
 	headerH    = 30
 	headerfill = 10
@@ -67,7 +65,7 @@ const (
 
 // }
 
-func cut12306(srcimg image.Image) {
+func cut12306(srcimg image.Image) []image.Image {
 	srcpoint := srcimg.Bounds().Size()
 
 	var zerox, zeroy = 0, 0
@@ -75,6 +73,8 @@ func cut12306(srcimg image.Image) {
 	header := image.NewRGBA(image.Rect(0, 0, srcpoint.X, headerH))
 
 	draw.Draw(header, srcimg.Bounds().Add(image.Pt(zerox, zeroy)), srcimg, srcimg.Bounds().Min, draw.Src)
+
+	var pics []image.Image
 	pics = append(pics, header)
 
 	for x := gap; x < srcimg.Bounds().Dx()-cellSize; x += cellSize + gap {
@@ -84,7 +84,7 @@ func cut12306(srcimg image.Image) {
 			pics = append(pics, new_img)
 		}
 	}
-
+	return pics
 }
 
 //OpenImageFromPath 从文件读图片
