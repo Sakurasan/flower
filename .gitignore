@@ -2,6 +2,4 @@
 *.exe
 ife/.idea/
 .idea/
-go.sum
-go.mod
 12306captcha/12306captcha
