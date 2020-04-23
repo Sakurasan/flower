@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"image/jpeg"
 	"io"
 	"io/ioutil"
 	"log"
@@ -11,6 +14,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	router "github.com/gorilla/mux"
 	// "github.com/Sakurasan/to"
 )
 
@@ -29,7 +34,9 @@ const tpl = `<!DOCTYPE html>
     <title>12306</title>
 </head>
 <body>
-    <div><img src="%s" alt=""></div>
+	<div><img src="%s" alt=""></div>
+	<br>
+	%s
 </body>
 </html>
 `
@@ -55,7 +62,7 @@ func main() {
 	}
 	url := fmt.Sprintf("%s%s", popup_passport_captcha, strconv.FormatInt(time.Now().UnixNano()/1e6, 10))
 
-	mux := http.NewServeMux()
+	mux := router.NewRouter()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		captcha12306 := captcha{}
 		data, err := DoGet(url)
@@ -67,9 +74,20 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		//fmt.Println("看这里:", captcha12306.Image)
-		//io.WriteString(w, attr+captcha12306.Image)
-		io.WriteString(w, fmt.Sprintf(tpl, attr+captcha12306.Image))
+		img, _, _ := ReadImageFromString(captcha12306.Image)
+		cut12306(img)
+		var imglist string
+		for _, v := range pics {
+			bf := bytes.NewBuffer(nil)
+			jpeg.Encode(bf, v, &jpeg.Options{Quality: 80})
+			imglist += fmt.Sprintf(`<img src=data:image/jpg;base64,%s><br>`, base64.StdEncoding.EncodeToString(bf.Bytes()))
+		}
+		orgin := r.Header.Get("Access-Control-Allow-Origin")
+		if orgin == "" {
+			orgin = r.Header.Get("Origin")
+		}
+
+		io.WriteString(w, fmt.Sprintf(tpl, attr+captcha12306.Image, imglist))
 	})
 
 	log.Fatalln(http.ListenAndServe(":"+port, mux))
